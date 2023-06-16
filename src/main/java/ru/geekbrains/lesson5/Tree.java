@@ -15,5 +15,22 @@ public class Tree {
             indent += "│  ";
         }
         System.out.println(file.getName());
+        File[] files = file.listFiles(); //метод listFiles вернет список sub-файлов
+        if (files == null)
+            return;
+
+        int subDirTotal = 0;
+        for ( int i = 0; i < files.length; i++) {
+            if (files[i].isDirectory())
+                subDirTotal++;
+        }
+
+        int subDirCounter = 0;
+        for ( int i = 0; i < files.length; i++) {
+            if (files[i].isDirectory()) {
+                print(files[i], indent, subDirCounter == subDirTotal - 1);
+                subDirCounter++;
+            }
+        }
     }
 }

@@ -1,9 +1,8 @@
 package ru.geekbrains.lesson5;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Program {
@@ -29,6 +28,18 @@ public class Program {
         System.out.println(searchInFile("sample02.txt", TO_SEARCH));
         concatenate("sample01.txt", "sample02.txt", "sample01_out.txt");
         System.out.println(searchInFile("sample01_out.txt", TO_SEARCH));
+        Tree.print(new File("."), "", true);
+
+        String[] fileNames = new String[10];
+        for (int i = 0; i < fileNames.length; i++) {
+            fileNames[i] = "file_" + i + ".txt";
+            writeFileContents(fileNames[i], 100, 4);
+            System.out.printf("Файл %s создан.\n", fileNames[i]);
+        }
+        List<String> result = searchMatch(fileNames, TO_SEARCH);
+        for (String s : result) {
+            System.out.printf("Файл %s содержит искомое слово '%s'\n", s, TO_SEARCH);
+        }
     }
 
     /**
@@ -134,5 +145,23 @@ public class Program {
             }
             return false;
         }
+    }
+    private static List<String> searchMatch(String[] files, String search) throws IOException {
+        List<String> list = new ArrayList<>();
+        File path = new File(new File(".").getCanonicalPath());
+        File[] dir = path.listFiles();
+        for (int i = 0; i < dir.length; i++) {
+            if (dir[i].isDirectory())
+                continue;
+            for (int j = 0; j < files.length; j++) {
+                if (dir[i].getName().equals(files[j])) {
+                    if (searchInFile(dir[i].getName(), search)) {
+                        list.add(dir[i].getName());
+                        break;
+                    }
+                }
+            }
+        }
+        return list;
     }
 }
